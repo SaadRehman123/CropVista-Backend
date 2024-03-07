@@ -24,8 +24,7 @@ namespace CropVista_Backend.Services
                             Id = Convert.ToInt32(dt.Rows[i]["Id"]),
                             name = Convert.ToString(dt.Rows[i]["name"]),
                             email = Convert.ToString(dt.Rows[i]["email"]),
-                            password = Convert.ToString(dt.Rows[i]["password"]),
-                            isAuthorized = Convert.ToBoolean(dt.Rows[i]["isAuthorized"])
+                            password = Convert.ToString(dt.Rows[i]["password"])
                         };
 
                         usersList.Add(users);

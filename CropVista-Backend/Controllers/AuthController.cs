@@ -3,15 +3,27 @@ using CropVista_Backend.Models;
 using CropVista_Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CropVista_Backend.Controllers
 {
+
     [Route("rest/authenticateUser")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
+        private IConfiguration _config;
+
+        public AuthController(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        private readonly string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
 
         [HttpPost]
         [Route("login/{email}/{password}")]
@@ -22,20 +34,24 @@ namespace CropVista_Backend.Controllers
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     AuthServices authService = new AuthServices();
-                    (bool isAuthenticated, int id) = authService.AuthenticateUser(connection, new Auth { email = email, password = password });
+                    bool isAuthenticated = authService.AuthenticateUser(connection, new Auth { email = email, password = password });
 
                     if (isAuthenticated)
                     {
+                        Auth auth = new Auth
+                        {
+                            email = email,
+                            password = password,
+                            isAuthorized = true
+                        };
+
+                        var token = GenerateJSONWebToken();
+                        auth.Tokken = token;
+
                         return new Result<Auth>
                         {
                             success = true,
-                            result = new Auth
-                            {
-                                id = id,
-                                email = email,
-                                password = password,
-                                isAuthorized = true,
-                            },
+                            result = auth,
                             message = "LOGIN_SUCCESS"
                         };
                     }
@@ -46,7 +62,6 @@ namespace CropVista_Backend.Controllers
                             success = false,
                             result = new Auth
                             {
-                                id = id,
                                 email = email,
                                 password = password,
                                 isAuthorized = false,
@@ -66,5 +81,32 @@ namespace CropVista_Backend.Controllers
                 };
             }
         }
+
+        private string GenerateJSONWebToken()
+        {
+            // Generate a 256-bit (32-byte) key
+            var keyBytes = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(keyBytes);
+            }
+
+            // Convert the byte array to a Base64 string
+            var base64Key = Convert.ToBase64String(keyBytes);
+
+            // Use the generated key for creating SymmetricSecurityKey
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(base64Key));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                _config["JwtSettings:Issuer"],
+                _config["JwtSettings:Issuer"],
+                expires: DateTime.Now.AddYears(10),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
     }
 }
