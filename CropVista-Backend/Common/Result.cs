@@ -12,7 +12,7 @@ namespace CropVista_Backend.Common
         {
             var objectResult = new ObjectResult(this)
             {
-                StatusCode = this.success ? 200 : 400
+                StatusCode = 200
             };
             await objectResult.ExecuteResultAsync(context);
         }
