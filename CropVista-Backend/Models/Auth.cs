@@ -2,6 +2,7 @@
 {
     public class Auth
     {
+        public int userId { get; set; }
         public string email { get; set; }
         private string tokken { get; set; } 
         public string Tokken

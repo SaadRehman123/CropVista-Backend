@@ -31,15 +31,42 @@ namespace CropVista_Backend.Controllers
         {
             try
             {
+                string GenerateJSONWebToken()
+                {
+                    // Generate a 256-bit (32-byte) key
+                    var keyBytes = new byte[32];
+                    using (var rng = RandomNumberGenerator.Create())
+                    {
+                        rng.GetBytes(keyBytes);
+                    }
+
+                    // Convert the byte array to a Base64 string
+                    var base64Key = Convert.ToBase64String(keyBytes);
+
+                    // Use the generated key for creating SymmetricSecurityKey
+                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(base64Key));
+                    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                    var token = new JwtSecurityToken(
+                        _config["JwtSettings:Issuer"],
+                        _config["JwtSettings:Issuer"],
+                        expires: DateTime.Now.AddYears(10),
+                        signingCredentials: credentials
+                    );
+
+                    return new JwtSecurityTokenHandler().WriteToken(token);
+                }
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     AuthServices authService = new AuthServices();
-                    bool isAuthenticated = authService.AuthenticateUser(connection, new Auth { email = email, password = password });
+                    (bool isAuthenticated, int userId) = authService.AuthenticateUser(connection, new Auth { email = email, password = password });
 
                     if (isAuthenticated)
                     {
                         Auth auth = new Auth
                         {
+                            userId = userId,
                             email = email,
                             password = password,
                             isAuthorized = true
@@ -82,31 +109,50 @@ namespace CropVista_Backend.Controllers
             }
         }
 
-        private string GenerateJSONWebToken()
+        [HttpGet]
+        [Route("getLoggedInUser/{userId}")]
+        public Result<Users> GetLoggedInUser(int userId)
         {
-            // Generate a 256-bit (32-byte) key
-            var keyBytes = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            try 
             {
-                rng.GetBytes(keyBytes);
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    Users user = new Users();
+
+                    AuthServices authServices = new AuthServices();
+
+                    user = authServices.GetLoggedInUser(connection, userId);
+
+                    if (user.name != null && user.email != null)
+                    {
+                        return new Result<Users>
+                        {
+                            result = user,
+                            success = true,
+                            message = "GET_LOGGED_IN_USER"
+                        };
+                    }
+                    else
+                    {
+                        return new Result<Users>
+                        {
+                            result = null,
+                            success = false,
+                            message = "INVALID_USER"
+                        };
+                    }
+                }
             }
-
-            // Convert the byte array to a Base64 string
-            var base64Key = Convert.ToBase64String(keyBytes);
-
-            // Use the generated key for creating SymmetricSecurityKey
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(base64Key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                _config["JwtSettings:Issuer"],
-                _config["JwtSettings:Issuer"],
-                expires: DateTime.Now.AddYears(10),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            catch (Exception ex)
+            {
+                return new Result<Users>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
         }
-
     }
 }
