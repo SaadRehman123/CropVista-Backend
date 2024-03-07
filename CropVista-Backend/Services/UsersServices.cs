@@ -21,11 +21,10 @@ namespace CropVista_Backend.Services
                     {
                         Users users = new Users
                         {
-                            Id = Convert.ToInt32(dt.Rows[i]["Id"]),
+                            userId = Convert.ToInt32(dt.Rows[i]["userId"]),
                             name = Convert.ToString(dt.Rows[i]["name"]),
                             email = Convert.ToString(dt.Rows[i]["email"]),
-                            password = Convert.ToString(dt.Rows[i]["password"]),
-                            isAuthorized = Convert.ToBoolean(dt.Rows[i]["isAuthorized"])
+                            password = Convert.ToString(dt.Rows[i]["password"])
                         };
 
                         usersList.Add(users);
@@ -38,7 +37,7 @@ namespace CropVista_Backend.Services
 
         public Users AddUser(SqlConnection connection, Users user)
         {
-            using (SqlCommand cmd = new SqlCommand("INSERT INTO users (name, email, password, isAuthorized) VALUES ('" + user.name + "', '" + user.email + "', '" + user.password + "', '" + false + "')", connection))
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO users (name, email, password) VALUES ('" + user.name + "', '" + user.email + "', '" + user.password + "')", connection))
             {
                 connection.Open();
                 int i = cmd.ExecuteNonQuery();

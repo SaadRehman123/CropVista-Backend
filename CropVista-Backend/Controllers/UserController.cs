@@ -11,7 +11,7 @@ namespace CropVista_Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
+        private readonly string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
 
         [HttpGet]
         [Route("getUsers")]
