@@ -7,14 +7,14 @@ using System.Data.SqlClient;
 
 namespace CropVista_Backend.Controllers
 {
-    [Route("rest/authenticateUserProfile")]
+    [Route("rest/authenticateUser")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
 
         [HttpPost]
-        [Route("login/{email},{password}")]
+        [Route("login/{email}/{password}")]
         public Result<Auth> Login(string email, string password)
         {
             try
@@ -51,7 +51,7 @@ namespace CropVista_Backend.Controllers
                                 password = password,
                                 isAuthorized = false,
                             },
-                            message = "INVALID_CREDENTIALS"
+                            message = "LOGIN_FAILED"
                         };
                     }
                 }
