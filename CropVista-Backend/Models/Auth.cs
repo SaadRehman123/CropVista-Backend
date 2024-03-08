@@ -4,11 +4,11 @@
     {
         public int userId { get; set; }
         public string email { get; set; }
-        private string tokken { get; set; } 
-        public string Tokken
+        private string token { get; set; } 
+        public string Token
         {
-            get { return tokken; }
-            set { tokken = value; }
+            get { return token; }
+            set { token = value; }
         }
         public string password { get; set; }
         public bool isAuthorized { get; set; }

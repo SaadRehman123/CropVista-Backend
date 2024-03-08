@@ -73,7 +73,7 @@ namespace CropVista_Backend.Controllers
                         };
 
                         var token = GenerateJSONWebToken();
-                        auth.Tokken = token;
+                        auth.Token = token;
 
                         return new Result<Auth>
                         {
