@@ -4,6 +4,8 @@ using CropVista_Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace CropVista_Backend.Controllers
 {
@@ -11,7 +13,11 @@ namespace CropVista_Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
+        private IConfiguration _config;
+        public UserController(IConfiguration config)
+        {
+            _config = config;
+        }
 
         [HttpGet]
         [Route("getUsers")]
@@ -19,9 +25,8 @@ namespace CropVista_Backend.Controllers
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    connection.Open();
                     List<Users> userList = new List<Users>();
 
                     UsersServices usersServices = new UsersServices();
@@ -53,7 +58,7 @@ namespace CropVista_Backend.Controllers
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
                     UsersServices usersServices = new UsersServices();
                     user = usersServices.AddUser(connection, user);

@@ -23,8 +23,6 @@ namespace CropVista_Backend.Controllers
             _config = config;
         }
 
-        private readonly string connectionString = "Data Source=DESKTOP-RO3M9PJ\\SQLEXPRESS;Initial Catalog=cropVista;Integrated Security=True; Encrypt=False;";
-
         [HttpPost]
         [Route("login/{email}/{password}")]
         public Result<Auth> Login(string email, string password)
@@ -57,7 +55,7 @@ namespace CropVista_Backend.Controllers
                     return new JwtSecurityTokenHandler().WriteToken(token);
                 }
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
                     AuthServices authService = new AuthServices();
                     (bool isAuthenticated, int userId) = authService.AuthenticateUser(connection, new Auth { email = email, password = password });
@@ -115,9 +113,8 @@ namespace CropVista_Backend.Controllers
         {
             try 
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    connection.Open();
                     Users user = new Users();
 
                     AuthServices authServices = new AuthServices();
