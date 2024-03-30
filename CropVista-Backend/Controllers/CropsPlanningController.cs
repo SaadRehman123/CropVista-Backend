@@ -17,39 +17,6 @@ namespace CropVista_Backend.Controllers
             _config = config;
         }
 
-        [HttpGet]
-        [Route("getCropsPlan")]
-        public Result<List<CropsPlanning>> GetPlannedCrops()
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
-                {
-                    List<CropsPlanning> plannedCropsList = new List<CropsPlanning>();
-
-                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-
-                    plannedCropsList = cropsPlanningServices.GetPlannedCrops(connection);
-
-                    return new Result<List<CropsPlanning>>
-                    {
-                        result = plannedCropsList,
-                        success = true,
-                        message = "GET_PLANNED_CROPS"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Result<List<CropsPlanning>>
-                {
-                    result = null,
-                    success = false,
-                    message = ex.Message
-                };
-            }
-        }
-
         [HttpPost]
         [Route("create")]
         public Result<CropsPlanning> AddCropsPlan(CropsPlanning cropsPlanning)
@@ -59,14 +26,14 @@ namespace CropVista_Backend.Controllers
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
                     CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-                    int generatedId = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
+                    string planId = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
 
-                    cropsPlanning.id = generatedId;
+                    cropsPlanning.id = planId;
 
                     return new Result<CropsPlanning>
                     {
-                        success = true,
                         result = cropsPlanning,
+                        success = true,
                         message = "ADD_CROPS_PLAN"
                     };
                 }
@@ -82,10 +49,9 @@ namespace CropVista_Backend.Controllers
             }
         }
 
-
         [HttpPost]
         [Route("update/{id}")]
-        public Result<CropsPlanning> UpdateCropsPlan(CropsPlanning cropsPlanning, int id)
+        public Result<CropsPlanning> UpdateCropsPlan(CropsPlanning cropsPlanning, string id)
         {
             try
             {
@@ -117,7 +83,7 @@ namespace CropVista_Backend.Controllers
 
         [HttpPost]
         [Route("delete/{id}")]
-        public Result<CropsPlanning> DeleteCropsPlan(CropsPlanning cropsPlanning, int id)
+        public Result<CropsPlanning> DeleteCropsPlan(CropsPlanning cropsPlanning, string id)
         {
             try
             {
@@ -139,6 +105,39 @@ namespace CropVista_Backend.Controllers
             catch (Exception ex)
             {
                 return new Result<CropsPlanning>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet]
+        [Route("getCropsPlan")]
+        public Result<List<CropsPlanning>> GetPlannedCrops()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    List<CropsPlanning> plannedCropsList = new List<CropsPlanning>();
+
+                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
+
+                    plannedCropsList = cropsPlanningServices.GetPlannedCrops(connection);
+
+                    return new Result<List<CropsPlanning>>
+                    {
+                        result = plannedCropsList,
+                        success = true,
+                        message = "GET_PLANNED_CROPS"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<List<CropsPlanning>>
                 {
                     result = null,
                     success = false,
