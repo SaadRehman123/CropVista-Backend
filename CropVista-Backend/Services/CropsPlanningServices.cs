@@ -37,28 +37,36 @@ namespace CropVista_Backend.Services
             return plannedCropsList;
         }
 
-        public CropsPlanning AddCropsPlan(SqlConnection connection, CropsPlanning cropsPlanning)
+        public int AddCropsPlan(SqlConnection connection, CropsPlanning cropsPlanning)
         {
-            using (SqlCommand cmd = new SqlCommand("INSERT INTO plannedcrops (crop, season, acre, startdate, enddate) VALUES ('" + cropsPlanning.crop + "', '" + cropsPlanning.season + "', '" + cropsPlanning.acre + "', '" + cropsPlanning.startdate + "', '" + cropsPlanning.enddate + "')", connection))
-            {
-                connection.Open();
-                int i = cmd.ExecuteNonQuery();
-                connection.Close();
-            }
+            int generatedId = 0;
 
-            return cropsPlanning;
-        }
-
-        public CropsPlanning UpdateCropsPlan(SqlConnection connection, CropsPlanning cropsPlanning, int id)
-        {
-            using (SqlCommand cmd = new SqlCommand("UPDATE plannedcrops SET crop = @crop, season = @season, acre = @acre, startdate = @startdate, enddate = @enddate WHERE id = @id", connection))
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO plannedcrops (crop, season, acre, startdate, enddate) VALUES (@crop, @season, @acre, @startdate, @enddate); SELECT SCOPE_IDENTITY();", connection))
             {
                 cmd.Parameters.AddWithValue("@crop", cropsPlanning.crop);
                 cmd.Parameters.AddWithValue("@season", cropsPlanning.season);
                 cmd.Parameters.AddWithValue("@acre", cropsPlanning.acre);
                 cmd.Parameters.AddWithValue("@startdate", cropsPlanning.startdate);
                 cmd.Parameters.AddWithValue("@enddate", cropsPlanning.enddate);
+
+                connection.Open();
+                generatedId = Convert.ToInt32(cmd.ExecuteScalar());
+                connection.Close();
+            }
+
+            return generatedId;
+        }
+
+        public CropsPlanning UpdateCropsPlan(SqlConnection connection, CropsPlanning cropsPlanning, int id)
+        {
+            using (SqlCommand cmd = new SqlCommand("UPDATE plannedcrops SET crop = @crop, season = @season, acre = @acre, startdate = @startdate, enddate = @enddate WHERE id = @id", connection))
+            {
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@crop", cropsPlanning.crop);
+                cmd.Parameters.AddWithValue("@season", cropsPlanning.season);
+                cmd.Parameters.AddWithValue("@acre", cropsPlanning.acre);
+                cmd.Parameters.AddWithValue("@startdate", cropsPlanning.startdate);
+                cmd.Parameters.AddWithValue("@enddate", cropsPlanning.enddate);
 
                 connection.Open();
                 int i = cmd.ExecuteNonQuery();
@@ -72,12 +80,12 @@ namespace CropVista_Backend.Services
         {
             using (SqlCommand cmd = new SqlCommand("DELETE FROM plannedcrops WHERE id = @id", connection))
             {
+                cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@crop", cropsPlanning.crop);
                 cmd.Parameters.AddWithValue("@season", cropsPlanning.season);
                 cmd.Parameters.AddWithValue("@acre", cropsPlanning.acre);
                 cmd.Parameters.AddWithValue("@startdate", cropsPlanning.startdate);
                 cmd.Parameters.AddWithValue("@enddate", cropsPlanning.enddate);
-                cmd.Parameters.AddWithValue("@id", id);
 
                 connection.Open();
                 int i = cmd.ExecuteNonQuery();

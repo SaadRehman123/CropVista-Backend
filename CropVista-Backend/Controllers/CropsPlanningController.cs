@@ -59,7 +59,9 @@ namespace CropVista_Backend.Controllers
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
                     CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-                    cropsPlanning = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
+                    int generatedId = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
+
+                    cropsPlanning.id = generatedId;
 
                     return new Result<CropsPlanning>
                     {
@@ -80,6 +82,7 @@ namespace CropVista_Backend.Controllers
             }
         }
 
+
         [HttpPost]
         [Route("update/{id}")]
         public Result<CropsPlanning> UpdateCropsPlan(CropsPlanning cropsPlanning, int id)
@@ -90,6 +93,8 @@ namespace CropVista_Backend.Controllers
                 {
                     CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
                     cropsPlanningServices.UpdateCropsPlan(connection, cropsPlanning, id);
+
+                    cropsPlanning.id = id;
 
                     return new Result<CropsPlanning>
                     {
@@ -120,6 +125,8 @@ namespace CropVista_Backend.Controllers
                 {
                     CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
                     cropsPlanningServices.DeleteCropsPlan(connection, cropsPlanning, id);
+
+                    cropsPlanning.id = id;
 
                     return new Result<CropsPlanning>
                     {
