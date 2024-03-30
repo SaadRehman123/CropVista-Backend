@@ -17,6 +17,102 @@ namespace CropVista_Backend.Controllers
             _config = config;
         }
 
+        [HttpPost]
+        [Route("create")]
+        public Result<CropsPlanning> AddCropsPlan(CropsPlanning cropsPlanning)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
+                    string planId = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
+
+                    cropsPlanning.id = planId;
+
+                    return new Result<CropsPlanning>
+                    {
+                        result = cropsPlanning,
+                        success = true,
+                        message = "ADD_CROPS_PLAN"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<CropsPlanning>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpPost]
+        [Route("update/{id}")]
+        public Result<CropsPlanning> UpdateCropsPlan(CropsPlanning cropsPlanning, string id)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
+                    cropsPlanningServices.UpdateCropsPlan(connection, cropsPlanning, id);
+
+                    cropsPlanning.id = id;
+
+                    return new Result<CropsPlanning>
+                    {
+                        success = true,
+                        result = cropsPlanning,
+                        message = "UPDATE_CROPS_PLAN"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<CropsPlanning>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpPost]
+        [Route("delete/{id}")]
+        public Result<CropsPlanning> DeleteCropsPlan(CropsPlanning cropsPlanning, string id)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
+                    cropsPlanningServices.DeleteCropsPlan(connection, cropsPlanning, id);
+
+                    cropsPlanning.id = id;
+
+                    return new Result<CropsPlanning>
+                    {
+                        success = true,
+                        result = cropsPlanning,
+                        message = "DELETE_CROPS_PLAN"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<CropsPlanning>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
         [HttpGet]
         [Route("getCropsPlan")]
         public Result<List<CropsPlanning>> GetPlannedCrops()
@@ -42,96 +138,6 @@ namespace CropVista_Backend.Controllers
             catch (Exception ex)
             {
                 return new Result<List<CropsPlanning>>
-                {
-                    result = null,
-                    success = false,
-                    message = ex.Message
-                };
-            }
-        }
-
-        [HttpPost]
-        [Route("create")]
-        public Result<CropsPlanning> AddCropsPlan(CropsPlanning cropsPlanning)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
-                {
-                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-                    cropsPlanning = cropsPlanningServices.AddCropsPlan(connection, cropsPlanning);
-
-                    return new Result<CropsPlanning>
-                    {
-                        success = true,
-                        result = cropsPlanning,
-                        message = "ADD_CROPS_PLAN"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Result<CropsPlanning>
-                {
-                    result = null,
-                    success = false,
-                    message = ex.Message
-                };
-            }
-        }
-
-        [HttpPost]
-        [Route("update/{id}")]
-        public Result<CropsPlanning> UpdateCropsPlan(CropsPlanning cropsPlanning, int id)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
-                {
-                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-                    cropsPlanningServices.UpdateCropsPlan(connection, cropsPlanning, id);
-
-                    return new Result<CropsPlanning>
-                    {
-                        success = true,
-                        result = cropsPlanning,
-                        message = "UPDATE_CROPS_PLAN"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Result<CropsPlanning>
-                {
-                    result = null,
-                    success = false,
-                    message = ex.Message
-                };
-            }
-        }
-
-        [HttpPost]
-        [Route("delete/{id}")]
-        public Result<CropsPlanning> DeleteCropsPlan(CropsPlanning cropsPlanning, int id)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
-                {
-                    CropsPlanningServices cropsPlanningServices = new CropsPlanningServices();
-                    cropsPlanningServices.DeleteCropsPlan(connection, cropsPlanning, id);
-
-                    return new Result<CropsPlanning>
-                    {
-                        success = true,
-                        result = cropsPlanning,
-                        message = "DELETE_CROPS_PLAN"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Result<CropsPlanning>
                 {
                     result = null,
                     success = false,
