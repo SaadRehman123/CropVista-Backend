@@ -14,74 +14,50 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @queryType = 1 -- Insert
+     IF @queryType = 1
     BEGIN
         DECLARE @NextId INT;
 
-        -- Find the next available ID
         SELECT @NextId = ISNULL(MAX(CAST(SUBSTRING(id, CHARINDEX('-', id) + 1, LEN(id) - CHARINDEX('-', id)) AS INT)), 0) + 1
         FROM plannedcrops
         WHERE id LIKE 'CP-%';
 
-        SET @id = 'CP-' + RIGHT('000' + CAST(@NextId AS NVARCHAR(10)), 3);
+        IF @NextId <= 9999
+        BEGIN
+            SET @id = 'CP-' + RIGHT('000' + CAST(@NextId AS NVARCHAR(10)), 4);
+        END
+        ELSE
+        BEGIN
+            SET @id = 'CP-' + CAST(@NextId AS NVARCHAR(10));
+        END
 
-        -- Insert crop plan
         INSERT INTO [dbo].[plannedcrops] ([id], [crop], [season], [acre], [startdate], [enddate], [status])
         VALUES (@id, @crop, @season, @acre, @startdate, @enddate, @status);
     END
-    ELSE IF @queryType = 2 -- Update
+    ELSE IF @queryType = 2
     BEGIN
-        -- Check if ID exists
-        IF EXISTS (SELECT 1 FROM [dbo].[plannedcrops] WHERE [id] = @id)
-        BEGIN
-            -- Update crop plan
-            UPDATE [dbo].[plannedcrops]
-            SET [crop] = @crop,
-                [season] = @season,
-                [acre] = @acre,
-                [startdate] = @startdate,
-                [enddate] = @enddate,
-                [status] = @status
-            WHERE [id] = @id;
-        END
-        ELSE
-        BEGIN
-            -- Handle ID not found error
-            RAISERROR('ID not found for update operation.', 16, 1);
-            RETURN;
-        END
+        UPDATE [dbo].[plannedcrops]
+        SET [crop] = @crop,
+            [season] = @season,
+            [acre] = @acre,
+            [startdate] = @startdate,
+            [enddate] = @enddate,
+            [status] = @status
+        WHERE [id] = @id;
     END
-    ELSE IF @queryType = 3 -- Delete
+    ELSE IF @queryType = 3
     BEGIN
-        -- Check if ID exists
-        IF EXISTS (SELECT 1 FROM [dbo].[plannedcrops] WHERE [id] = @id)
-        BEGIN
-            -- Delete crop plan
-            DELETE FROM [dbo].[plannedcrops]
-            WHERE [id] = @id;
-        END
-        ELSE
-        BEGIN
-            -- Handle ID not found error
-            RAISERROR('ID not found for delete operation.', 16, 1);
-            RETURN;
-        END
+        -- Delete crop plan
+        DELETE FROM [dbo].[plannedcrops]
+        WHERE [id] = @id;
     END
-    ELSE IF @queryType = 4 -- Read
+    ELSE IF @queryType = 4
     BEGIN
-        -- Read crop plans
         SELECT * FROM [dbo].[plannedcrops];
     END
     ELSE
-
-    IF @@ERROR <> 0
     BEGIN
-        ROLLBACK TRANSACTION; --Rollback changes if error occurred
-        -- Handle failure due to SQL error
-    END
-    ELSE
-    BEGIN
-        COMMIT TRANSACTION; -- Commit changes if no error occurred
-        -- Handle success
+        RAISERROR('Invalid Query Type', 16, 1);
+        RETURN;
     END
 END
