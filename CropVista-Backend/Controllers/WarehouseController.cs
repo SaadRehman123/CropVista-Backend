@@ -19,7 +19,7 @@ namespace CropVista_Backend.Controllers
 
         [HttpPost]
         [Route("create")]
-        public Result<Warehouse> AddCropsPlan(Warehouse warehouse)
+        public Result<Warehouse> AddWarehouse(Warehouse warehouse)
         {
             try
             {
@@ -41,6 +41,39 @@ namespace CropVista_Backend.Controllers
             catch (Exception ex)
             {
                 return new Result<Warehouse>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet]
+        [Route("getWarehouses")]
+        public Result<List<Warehouse>> GetWareHouses()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    List<Warehouse> warehouses = new List<Warehouse>();
+
+                    WarehouseServices warehouseServices = new WarehouseServices();
+
+                    warehouses = warehouseServices.AddWarehouses(connection);
+
+                    return new Result<List<Warehouse>>
+                    {
+                        result = warehouses,
+                        success = true,
+                        message = "GET_WAREHOUSE"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<List<Warehouse>>
                 {
                     result = null,
                     success = false,

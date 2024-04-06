@@ -46,5 +46,55 @@ namespace CropVista_Backend.Services
 
             return wareHouseId;
         }
+
+        public List<Warehouse> AddWarehouses(SqlConnection connection)
+        {
+            List<Warehouse> warehouses = new List<Warehouse>();
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand("CreateWarehouse", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@queryType", 4);
+                    command.Parameters.AddWithValue("@wrId", "");
+                    command.Parameters.AddWithValue("@name", "");
+                    command.Parameters.AddWithValue("@wrType", "");
+                    command.Parameters.AddWithValue("@inactive", "");
+                    command.Parameters.AddWithValue("@location", "");
+
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Warehouse warehouse = new Warehouse
+                            {
+                                wrId = reader.GetString(reader.GetOrdinal("wrId")),
+                                name = reader.GetString(reader.GetOrdinal("name")),
+                                wrType = reader.GetString(reader.GetOrdinal("wrType")),
+                                inactive = reader.GetBoolean(reader.GetOrdinal("inactive")),
+                                location = reader.GetString(reader.GetOrdinal("location"))
+                            };
+
+                            warehouses.Add(warehouse);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return warehouses;
+        }
     }
 }
