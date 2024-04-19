@@ -6,7 +6,7 @@ CREATE PROCEDURE [dbo].[CreateWarehouse]
     @wrId nvarchar(50) OUTPUT,
     @name nvarchar(50),
     @wrType nvarchar(50),
-    @inactive bit,
+    @active bit,
     @location nvarchar(50)
 AS
 BEGIN
@@ -29,8 +29,8 @@ BEGIN
             SET @wrId = 'WR-' + CAST(@NextId AS NVARCHAR(10));
         END
 
-        INSERT INTO [dbo].[warehouse] ([wrId], [name], [wrType], [inactive], [location])
-        VALUES (@wrId, @name, @wrType, @inactive, @location);
+        INSERT INTO [dbo].[warehouse] ([wrId], [name], [wrType], [active], [location])
+        VALUES (@wrId, @name, @wrType, @active, @location);
     END
     ELSE IF @queryType = 2
     BEGIN
@@ -38,7 +38,7 @@ BEGIN
         SET [wrId] = @wrId,
             [name] = @name,
             [wrType] = @wrType,
-            [inactive] = @inactive,
+            [active] = @active,
             [location] = @location
 			
         WHERE [wrId] = @wrId;
