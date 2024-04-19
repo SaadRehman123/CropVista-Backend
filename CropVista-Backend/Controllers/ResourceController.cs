@@ -7,40 +7,40 @@ using System.Data.SqlClient;
 
 namespace CropVista_Backend.Controllers
 {
-    [Route("rest/warehouse")]
+    [Route("rest/resource")]
     [ApiController]
-    public class WarehouseController : ControllerBase
+    public class ResourceController : ControllerBase
     {
         private IConfiguration _config;
-        public WarehouseController(IConfiguration config)
+        public ResourceController(IConfiguration config)
         {
             _config = config;
         }
 
         [HttpPost]
         [Route("create")]
-        public Result<Warehouse> AddWarehouse(Warehouse warehouse)
+        public Result<Resource> AddResource(Resource resource)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    WarehouseServices warehouseServices = new WarehouseServices();
-                    string wareHouseId = warehouseServices.AddWarehouse(connection, warehouse);
+                    ResourceServices resourceServices = new ResourceServices();
+                    string resourceId = resourceServices.AddResource(connection, resource);
 
-                    warehouse.wrId = wareHouseId;
+                    resource.rId = resourceId;
 
-                    return new Result<Warehouse>
+                    return new Result<Resource>
                     {
-                        result = warehouse,
+                        result = resource,
                         success = true,
-                        message = "ADD_WAREHOUSE"
+                        message = "ADD_RESOURCE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<Warehouse>
+                return new Result<Resource>
                 {
                     result = null,
                     success = false,
@@ -51,28 +51,28 @@ namespace CropVista_Backend.Controllers
 
         [HttpPost]
         [Route("update/{id}")]
-        public Result<Warehouse> UpdateWarehoues(Warehouse warehouse, string id)
+        public Result<Resource> UpdateResource(Resource resource, string id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    WarehouseServices warehouseServices= new WarehouseServices();
-                    warehouseServices.UpdateWarehoues(connection, warehouse, id);
+                    ResourceServices resourceServices = new ResourceServices();
+                    resourceServices.UpdateResource(connection, resource, id);
 
-                    warehouse.wrId = id;
+                    resource.rId = id;
 
-                    return new Result<Warehouse>
+                    return new Result<Resource>
                     {
                         success = true,
-                        result = warehouse,
-                        message = "UPDATE_WAREHOUSE"
+                        result = resource,
+                        message = "UPDATE_RESOURCE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<Warehouse>
+                return new Result<Resource>
                 {
                     result = null,
                     success = false,
@@ -83,28 +83,28 @@ namespace CropVista_Backend.Controllers
 
         [HttpPost]
         [Route("delete/{id}")]
-        public Result<Warehouse> DeleteWarehouse(Warehouse warehouse, string id)
+        public Result<Resource> DeleteWarehouse(Resource resource, string id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    WarehouseServices warehouseServices = new WarehouseServices();
-                    warehouseServices.DeleteWarehouse(connection, warehouse, id);
+                    ResourceServices resourceServices = new ResourceServices();
+                    resourceServices.DeleteResource(connection, resource, id);
 
-                    warehouse.wrId = id;
+                    resource.rId = id;
 
-                    return new Result<Warehouse>
+                    return new Result<Resource>
                     {
                         success = true,
-                        result = warehouse,
-                        message = "DELETE_WAREHOUSE"
+                        result = resource,
+                        message = "DELETE_RESOURCE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<Warehouse>
+                return new Result<Resource>
                 {
                     result = null,
                     success = false,
@@ -114,30 +114,30 @@ namespace CropVista_Backend.Controllers
         }
 
         [HttpGet]
-        [Route("getWarehouses")]
-        public Result<List<Warehouse>> GetWareHouses()
+        [Route("getResources")]
+        public Result<List<Resource>> GetResources()
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    List<Warehouse> warehouses = new List<Warehouse>();
+                    List<Resource> resources = new List<Resource>();
 
-                    WarehouseServices warehouseServices = new WarehouseServices();
+                    ResourceServices resourceServices = new ResourceServices();
 
-                    warehouses = warehouseServices.GetWarehouses(connection);
+                    resources = resourceServices.GetResources(connection);
 
-                    return new Result<List<Warehouse>>
+                    return new Result<List<Resource>>
                     {
-                        result = warehouses,
+                        result = resources,
                         success = true,
-                        message = "GET_WAREHOUSE"
+                        message = "GET_RESOURCES"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<List<Warehouse>>
+                return new Result<List<Resource>>
                 {
                     result = null,
                     success = false,
