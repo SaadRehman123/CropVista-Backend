@@ -32,7 +32,7 @@ namespace CropVista_Backend.Controllers
                     {
                         result = itemResources,
                         success = true,
-                        message = "ADD_BOM_ITEM_RESOURCES"
+                        message = "ADD_BOM_ITEM_RESOURCE"
                     };
                 }
             }

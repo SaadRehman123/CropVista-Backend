@@ -29,6 +29,7 @@ namespace CropVista_Backend.Services
                         cmd.Parameters.AddWithValue("@unitPrice", item.unitPrice);
                         cmd.Parameters.AddWithValue("@routeSequence", item.routeSequence);
                         cmd.Parameters.AddWithValue("@priceList", item.priceList);
+                        cmd.Parameters.AddWithValue("@parentId", item.BID);
 
                         cmd.ExecuteNonQuery();
                     }
