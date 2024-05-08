@@ -46,5 +46,65 @@ namespace CropVista_Backend.Controllers
                 };
             }
         }
+
+        [HttpPost]
+        [Route("update/{id}")]
+        public Result<itemResource> UpdateBomItemResources(itemResource itemResource, string id)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    BomItemResourceServices bomItemResourceServices = new BomItemResourceServices();
+                    bomItemResourceServices.UpdateBomItemResource(connection, itemResource, id);
+
+                    return new Result<itemResource>
+                    {
+                        success = true,
+                        result = itemResource,
+                        message = "UPDATE_BOM_ITEM_RESOURCE"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<itemResource>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpPost]
+        [Route("delete/{id}")]
+        public Result<itemResource> DeleteBomItemResources(itemResource itemResource, string id)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    BomItemResourceServices bomItemResourceServices = new BomItemResourceServices();
+                    bomItemResourceServices.DeleteBomItemResource(connection, itemResource, id);
+
+                    return new Result<itemResource>
+                    {
+                        success = true,
+                        result = itemResource,
+                        message = "DELETE_BOM_ITEM_RESOURCE"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<itemResource>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
     }
 }

@@ -55,7 +55,79 @@ namespace CropVista_Backend.Services
 
             return BID;
         }
+        public Bom UpdateBom(SqlConnection connection, Bom bom, string id)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("CreateBom", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.AddWithValue("@queryType", 2);
+                    cmd.Parameters.AddWithValue("@BID", id);
+                    cmd.Parameters.AddWithValue("@productId", bom.productId);
+                    cmd.Parameters.AddWithValue("@productDescription", bom.productDescription);
+                    cmd.Parameters.AddWithValue("@productionStdCost", bom.productionStdCost);
+                    cmd.Parameters.AddWithValue("@quantity", bom.quantity);
+                    cmd.Parameters.AddWithValue("@wrId", bom.wrId);
+                    cmd.Parameters.AddWithValue("@priceList", bom.priceList);
+                    cmd.Parameters.AddWithValue("@total", bom.total);
+                    cmd.Parameters.AddWithValue("@productPrice", bom.productPrice);
+                    cmd.Parameters.AddWithValue("@creationDate", bom.creationDate);
+                    cmd.Parameters.AddWithValue("@itemBID", "");
+
+                    connection.Open();
+                    int i = cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return bom;
+        }
+        public Bom DeleteBom(SqlConnection connection, Bom bom, string id)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("CreateBom", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@queryType", 3);
+                    cmd.Parameters.AddWithValue("@BID", id);
+                    cmd.Parameters.AddWithValue("@productId", bom.productId);
+                    cmd.Parameters.AddWithValue("@productDescription", bom.productDescription);
+                    cmd.Parameters.AddWithValue("@productionStdCost", bom.productionStdCost);
+                    cmd.Parameters.AddWithValue("@quantity", bom.quantity);
+                    cmd.Parameters.AddWithValue("@wrId", bom.wrId);
+                    cmd.Parameters.AddWithValue("@priceList", bom.priceList);
+                    cmd.Parameters.AddWithValue("@total", bom.total);
+                    cmd.Parameters.AddWithValue("@productPrice", bom.productPrice);
+                    cmd.Parameters.AddWithValue("@creationDate", bom.creationDate);
+                    cmd.Parameters.AddWithValue("@itemBID", "");
+
+                    connection.Open();
+                    int i = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return bom;
+        }
         public List<Bom> GetBom(SqlConnection connection, string itemBID)
         {
             List<Bom> resultList = new List<Bom>();
@@ -122,7 +194,8 @@ namespace CropVista_Backend.Services
                                 unitPrice = (float)reader.GetDouble(reader.GetOrdinal("unitPrice")),
                                 total = (float)reader.GetDouble(reader.GetOrdinal("total")),
                                 routeSequence = reader.GetInt32(reader.GetOrdinal("routeSequence")),
-                                priceList = reader.GetString(reader.GetOrdinal("priceList"))
+                                priceList = reader.GetString(reader.GetOrdinal("priceList")),
+                                itemResourceId = reader.GetString(reader.GetOrdinal("itemResourceId"))
                             };
 
                             bomDictionary[bomId].Children.Add(resource);
