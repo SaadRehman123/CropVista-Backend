@@ -25,12 +25,11 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@productionStdCost", bom.productionStdCost);
                     cmd.Parameters.AddWithValue("@quantity", bom.quantity);
                     cmd.Parameters.AddWithValue("@wrId", bom.wrId);
-                    cmd.Parameters.AddWithValue("@priceList", bom.priceList);
                     cmd.Parameters.AddWithValue("@total", bom.total);
                     cmd.Parameters.AddWithValue("@productPrice", bom.productPrice);
                     cmd.Parameters.AddWithValue("@creationDate", bom.creationDate);
                     cmd.Parameters.AddWithValue("@itemBID", "");
-
+                    
                     // Output parameter to capture the generated ID
                     SqlParameter outputParam = new SqlParameter("@BID", SqlDbType.NVarChar, 50)
                     {
@@ -70,7 +69,6 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@productionStdCost", bom.productionStdCost);
                     cmd.Parameters.AddWithValue("@quantity", bom.quantity);
                     cmd.Parameters.AddWithValue("@wrId", bom.wrId);
-                    cmd.Parameters.AddWithValue("@priceList", bom.priceList);
                     cmd.Parameters.AddWithValue("@total", bom.total);
                     cmd.Parameters.AddWithValue("@productPrice", bom.productPrice);
                     cmd.Parameters.AddWithValue("@creationDate", bom.creationDate);
@@ -107,7 +105,6 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@productionStdCost", bom.productionStdCost);
                     cmd.Parameters.AddWithValue("@quantity", bom.quantity);
                     cmd.Parameters.AddWithValue("@wrId", bom.wrId);
-                    cmd.Parameters.AddWithValue("@priceList", bom.priceList);
                     cmd.Parameters.AddWithValue("@total", bom.total);
                     cmd.Parameters.AddWithValue("@productPrice", bom.productPrice);
                     cmd.Parameters.AddWithValue("@creationDate", bom.creationDate);
@@ -145,7 +142,6 @@ namespace CropVista_Backend.Services
                     command.Parameters.AddWithValue("@productionStdCost", "");
                     command.Parameters.AddWithValue("@quantity", "");
                     command.Parameters.AddWithValue("@wrId", "");
-                    command.Parameters.AddWithValue("@priceList", "");
                     command.Parameters.AddWithValue("@total", "");
                     command.Parameters.AddWithValue("@productPrice", "");
                     command.Parameters.AddWithValue("@creationDate", "");
@@ -172,7 +168,6 @@ namespace CropVista_Backend.Services
                                     productionStdCost = (float)reader.GetDouble(reader.GetOrdinal("productionStdCost")),
                                     quantity = reader.GetInt32(reader.GetOrdinal("quantity")),
                                     wrId = reader.GetString(reader.GetOrdinal("wrId")),
-                                    priceList = reader.GetString(reader.GetOrdinal("priceList")),
                                     total = (float)reader.GetDouble(reader.GetOrdinal("total")),
                                     productPrice = (float)reader.GetDouble(reader.GetOrdinal("productPrice")),
                                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate")).ToString("yyyy-MM-dd"),
@@ -194,7 +189,6 @@ namespace CropVista_Backend.Services
                                 unitPrice = (float)reader.GetDouble(reader.GetOrdinal("unitPrice")),
                                 total = (float)reader.GetDouble(reader.GetOrdinal("total")),
                                 routeSequence = reader.GetInt32(reader.GetOrdinal("routeSequence")),
-                                priceList = reader.GetString(reader.GetOrdinal("priceList")),
                                 itemResourceId = reader.GetString(reader.GetOrdinal("itemResourceId"))
                             };
 

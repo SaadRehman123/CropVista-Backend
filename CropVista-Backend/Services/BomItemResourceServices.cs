@@ -29,9 +29,8 @@ namespace CropVista_Backend.Services
                         cmd.Parameters.AddWithValue("@warehouseId", item.warehouseId);
                         cmd.Parameters.AddWithValue("@unitPrice", item.unitPrice);
                         cmd.Parameters.AddWithValue("@routeSequence", item.routeSequence);
-                        cmd.Parameters.AddWithValue("@priceList", item.priceList);
                         cmd.Parameters.AddWithValue("@itemResourceId", "");
-                        
+
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -63,7 +62,6 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@warehouseId", itemResource.warehouseId);
                     cmd.Parameters.AddWithValue("@unitPrice", itemResource.unitPrice);
                     cmd.Parameters.AddWithValue("@routeSequence", itemResource.routeSequence);
-                    cmd.Parameters.AddWithValue("@priceList", itemResource.priceList);
                     cmd.Parameters.AddWithValue("@itemResourceId", id);
 
                     connection.Open();
@@ -100,7 +98,6 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@warehouseId", itemResource.warehouseId);
                     cmd.Parameters.AddWithValue("@unitPrice", itemResource.unitPrice);
                     cmd.Parameters.AddWithValue("@routeSequence", itemResource.routeSequence);
-                    cmd.Parameters.AddWithValue("@priceList", itemResource.priceList);
                     cmd.Parameters.AddWithValue("@itemResourceId", id);
 
                     connection.Open();

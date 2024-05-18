@@ -12,7 +12,6 @@
         public double unitPrice { get; set; }
         public double total { get; set; }
         public int routeSequence { get; set; }
-        public string priceList { get; set; }
         public string itemResourceId { get; set; }
     }
 }
