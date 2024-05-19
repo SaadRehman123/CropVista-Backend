@@ -183,7 +183,7 @@ namespace CropVista_Backend.Services
                                 id = reader.GetString(reader.GetOrdinal("id")),
                                 name = reader.GetString(reader.GetOrdinal("name")),
                                 type = reader.GetString(reader.GetOrdinal("type")),
-                                quantity = reader.GetInt32(reader.GetOrdinal("quantity")),
+                                Itemquantity = reader.GetInt32(reader.GetOrdinal("Itemquantity")),
                                 UOM = reader.GetString(reader.GetOrdinal("UOM")),
                                 warehouseId = reader.GetString(reader.GetOrdinal("warehouseId")),
                                 unitPrice = (float)reader.GetDouble(reader.GetOrdinal("unitPrice")),

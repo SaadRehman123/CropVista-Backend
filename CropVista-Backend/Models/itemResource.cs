@@ -6,7 +6,7 @@
         public string id { get; set; }
         public string name { get; set; }
         public string type { get; set; }
-        public int quantity { get; set; }
+        public int Itemquantity { get; set; }
         public string UOM { get; set; }
         public string warehouseId { get; set; }
         public double unitPrice { get; set; }

@@ -24,7 +24,7 @@ namespace CropVista_Backend.Services
                         cmd.Parameters.AddWithValue("@id", item.id);
                         cmd.Parameters.AddWithValue("@name", item.name);
                         cmd.Parameters.AddWithValue("@type", item.type);
-                        cmd.Parameters.AddWithValue("@quantity", item.quantity);
+                        cmd.Parameters.AddWithValue("@quantity", item.Itemquantity);
                         cmd.Parameters.AddWithValue("@UOM", item.UOM);
                         cmd.Parameters.AddWithValue("@warehouseId", item.warehouseId);
                         cmd.Parameters.AddWithValue("@unitPrice", item.unitPrice);
@@ -57,7 +57,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@id", itemResource.id);
                     cmd.Parameters.AddWithValue("@name", itemResource.name);
                     cmd.Parameters.AddWithValue("@type", itemResource.type);
-                    cmd.Parameters.AddWithValue("@quantity", itemResource.quantity);
+                    cmd.Parameters.AddWithValue("@quantity", itemResource.Itemquantity);
                     cmd.Parameters.AddWithValue("@UOM", itemResource.UOM);
                     cmd.Parameters.AddWithValue("@warehouseId", itemResource.warehouseId);
                     cmd.Parameters.AddWithValue("@unitPrice", itemResource.unitPrice);
@@ -93,7 +93,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@id", itemResource.id);
                     cmd.Parameters.AddWithValue("@name", itemResource.name);
                     cmd.Parameters.AddWithValue("@type", itemResource.type);
-                    cmd.Parameters.AddWithValue("@quantity", itemResource.quantity);
+                    cmd.Parameters.AddWithValue("@quantity", itemResource.Itemquantity);
                     cmd.Parameters.AddWithValue("@UOM", itemResource.UOM);
                     cmd.Parameters.AddWithValue("@warehouseId", itemResource.warehouseId);
                     cmd.Parameters.AddWithValue("@unitPrice", itemResource.unitPrice);
