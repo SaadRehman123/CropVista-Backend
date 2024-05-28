@@ -9,5 +9,6 @@
         public string startdate { get; set; }
         public string enddate { get; set; }
         public string status { get; set; }
+        public string itemId { get; set; }
     }
 }

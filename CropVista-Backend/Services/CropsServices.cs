@@ -6,6 +6,18 @@ namespace CropVista_Backend.Services
 {
     public class CropsServices
     {
+        public Crops AddCrop(SqlConnection connection, Crops crops)
+        {
+            using (SqlCommand cmd = new SqlCommand("INSERT INTO crops (cropId, name, season) VALUES ('" + crops.cropId + "', '" + crops.name + "', '" + crops.season + "')", connection))
+            {
+                connection.Open();
+                int i = cmd.ExecuteNonQuery();
+                connection.Close();
+            }
+
+            return crops;
+        }
+
         public List<Crops> GetCropsBySeason(SqlConnection connection, string season)
         {
             List<Crops> cropsList = new List<Crops>();

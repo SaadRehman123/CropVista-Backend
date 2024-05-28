@@ -18,6 +18,36 @@ namespace CropVista_Backend.Controllers
             _config = config;
         }
 
+        [HttpPost]
+        [Route("create")]
+        public Result<Crops> AddCrop(Crops crops)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    CropsServices cropsServices = new CropsServices();
+                    crops = cropsServices.AddCrop(connection, crops);
+
+                    return new Result<Crops>
+                    {
+                        success = true,
+                        result = crops,
+                        message = "ADD_CROP"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<Crops>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
         [HttpGet]
         [Route("getCropsBySeason/{season}")]
         public Result<List<Crops>> GetCropsBySeason(string season)

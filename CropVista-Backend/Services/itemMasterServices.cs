@@ -6,6 +6,84 @@ namespace CropVista_Backend.Services
 {
     public class itemMasterServices
     {
+        public string AddItem(SqlConnection connection, itemMaster item)
+        {
+            string itemMasterId = "";
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("CreateItemMaster", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@queryType", 1);
+                    cmd.Parameters.AddWithValue("@itemName", item.ItemName);
+                    cmd.Parameters.AddWithValue("@itemType", item.ItemType);
+                    cmd.Parameters.AddWithValue("@sellingRate", item.SellingRate);
+                    cmd.Parameters.AddWithValue("@valuationRate", item.ValuationRate);
+                    cmd.Parameters.AddWithValue("@disable", item.Disable);
+                    cmd.Parameters.AddWithValue("@UOM", item.UOM);
+                    cmd.Parameters.AddWithValue("@season", item.season);
+
+                    // Output parameter to capture the generated ID
+                    SqlParameter outputParam = new SqlParameter("@itemId", SqlDbType.NVarChar, 50)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outputParam);
+
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+
+                    itemMasterId = outputParam.Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return itemMasterId;
+        }
+        public itemMaster UpdateItem(SqlConnection connection, itemMaster item, string id)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("CreateItemMaster", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@queryType", 2);
+                    cmd.Parameters.AddWithValue("@itemId", id);
+                    cmd.Parameters.AddWithValue("@itemName", item.ItemName);
+                    cmd.Parameters.AddWithValue("@itemType", item.ItemType);
+                    cmd.Parameters.AddWithValue("@sellingRate", item.SellingRate);
+                    cmd.Parameters.AddWithValue("@valuationRate", item.ValuationRate);
+                    cmd.Parameters.AddWithValue("@disable", item.Disable);
+                    cmd.Parameters.AddWithValue("@UOM", item.UOM);
+                    cmd.Parameters.AddWithValue("@season", item.season);
+
+                    connection.Open();
+                    int i = cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return item;
+        }
+
         public List<itemMaster> GetItemMaster(SqlConnection connection)
         {
             List<itemMaster> items = new List<itemMaster>();
@@ -24,6 +102,8 @@ namespace CropVista_Backend.Services
                     command.Parameters.AddWithValue("@valuationRate", "");
                     command.Parameters.AddWithValue("@disable", "");
                     command.Parameters.AddWithValue("@UOM", "");
+                    command.Parameters.AddWithValue("@season", "");
+
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
 
@@ -40,6 +120,7 @@ namespace CropVista_Backend.Services
                                 ValuationRate = (float)reader.GetDouble(reader.GetOrdinal("valuationRate")),
                                 Disable = reader.GetBoolean(reader.GetOrdinal("disable")),
                                 UOM = reader.GetString(reader.GetOrdinal("UOM")),
+                                season = reader.GetString(reader.GetOrdinal("season")),
                             };
 
                             items.Add(item);

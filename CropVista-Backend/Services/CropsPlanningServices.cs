@@ -23,6 +23,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@startdate", DateTime.Parse(cropsPlanning.startdate));
                     cmd.Parameters.AddWithValue("@enddate", DateTime.Parse(cropsPlanning.enddate));
                     cmd.Parameters.AddWithValue("@status", cropsPlanning.status);
+                    cmd.Parameters.AddWithValue("@itemId", cropsPlanning.itemId);
 
                     // Output parameter to capture the generated ID
                     SqlParameter outputParam = new SqlParameter("@id", SqlDbType.NVarChar, 50)
@@ -64,6 +65,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@startdate", DateTime.Parse(cropsPlanning.startdate));
                     cmd.Parameters.AddWithValue("@enddate", DateTime.Parse(cropsPlanning.enddate));
                     cmd.Parameters.AddWithValue("@status", cropsPlanning.status);
+                    cmd.Parameters.AddWithValue("@itemId", cropsPlanning.itemId);
 
                     connection.Open();
                     int i = cmd.ExecuteNonQuery();
@@ -97,6 +99,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@startdate", DateTime.Parse(cropsPlanning.startdate));
                     cmd.Parameters.AddWithValue("@enddate", DateTime.Parse(cropsPlanning.enddate));
                     cmd.Parameters.AddWithValue("@status", cropsPlanning.status);
+                    cmd.Parameters.AddWithValue("@itemId", cropsPlanning.itemId);
 
                     connection.Open();
                     int i = cmd.ExecuteNonQuery();
@@ -131,6 +134,7 @@ namespace CropVista_Backend.Services
                     command.Parameters.AddWithValue("@startdate", "");
                     command.Parameters.AddWithValue("@enddate", "");
                     command.Parameters.AddWithValue("@status", "");
+                    command.Parameters.AddWithValue("@itemId", "");
 
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
@@ -147,7 +151,8 @@ namespace CropVista_Backend.Services
                                 acre = reader.GetInt32(reader.GetOrdinal("acre")),
                                 startdate = reader.GetDateTime(reader.GetOrdinal("startdate")).ToString("yyyy-MM-dd"),
                                 enddate = reader.GetDateTime(reader.GetOrdinal("enddate")).ToString("yyyy-MM-dd"),
-                                status = reader.GetString(reader.GetOrdinal("status"))
+                                status = reader.GetString(reader.GetOrdinal("status")),
+                                itemId = reader.GetString(reader.GetOrdinal("itemId"))
                             };
 
                             plannedCropsList.Add(cropsPlanning);

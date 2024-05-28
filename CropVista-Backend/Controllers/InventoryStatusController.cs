@@ -7,40 +7,41 @@ using System.Data.SqlClient;
 
 namespace CropVista_Backend.Controllers
 {
-    [Route("rest/itemMaster")]
+    [Route("rest/inventory")]
     [ApiController]
-    public class itemMasterController : ControllerBase
+    public class InventoryStatusController : ControllerBase
     {
         private IConfiguration _config;
-        public itemMasterController(IConfiguration config)
+
+        public InventoryStatusController(IConfiguration config)
         {
             _config = config;
         }
 
         [HttpPost]
         [Route("create")]
-        public Result<itemMaster> AddItem(itemMaster item)
+        public Result<InventoryStatus> AddInventory(InventoryStatus inventory)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    itemMasterServices itemMasterServices = new itemMasterServices();
-                    string itemMasterId = itemMasterServices.AddItem(connection, item);
+                    InventoryStatusServices inventoryStatusServices = new InventoryStatusServices();
+                    string inventoryId = inventoryStatusServices.AddInventory(connection, inventory);
 
-                    item.ItemId = itemMasterId;
+                    inventory.inventoryId = inventoryId;
 
-                    return new Result<itemMaster>
+                    return new Result<InventoryStatus>
                     {
-                        result = item,
+                        result = inventory,
                         success = true,
-                        message = "ADD_ITEM"
+                        message = "ADD_INVENTORY"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<itemMaster>
+                return new Result<InventoryStatus>
                 {
                     result = null,
                     success = false,
@@ -51,28 +52,28 @@ namespace CropVista_Backend.Controllers
 
         [HttpPost]
         [Route("update/{id}")]
-        public Result<itemMaster> UpdateItem(itemMaster item, string id)
+        public Result<InventoryStatus> UpdateCropsPlan(InventoryStatus inventory, string id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    itemMasterServices itemMasterServices = new itemMasterServices();
-                    itemMasterServices.UpdateItem(connection, item, id);
+                    InventoryStatusServices inventoryStatusServices = new InventoryStatusServices();
+                    inventoryStatusServices.UpdateInventory(connection, inventory, id);
 
-                    item.ItemId = id;
+                    inventory.inventoryId = id;
 
-                    return new Result<itemMaster>
+                    return new Result<InventoryStatus>
                     {
                         success = true,
-                        result = item,
-                        message = "UPDATE_ITEM"
+                        result = inventory,
+                        message = "UPDATE_INVENTORY"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<itemMaster>
+                return new Result<InventoryStatus>
                 {
                     result = null,
                     success = false,
@@ -82,30 +83,29 @@ namespace CropVista_Backend.Controllers
         }
 
         [HttpGet]
-        [Route("getItemMaster")]
-        public Result<List<itemMaster>> GetItemMaster()
+        [Route("getInventory")]
+        public Result<List<InventoryStatus>> GetInventoryStatus()
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    List<itemMaster> items = new List<itemMaster>();
+                    List<InventoryStatus> inventories = new List<InventoryStatus>();
 
-                    itemMasterServices itemMasterServices = new itemMasterServices();
+                    InventoryStatusServices inventoryStatusServices = new InventoryStatusServices();
+                    inventories = inventoryStatusServices.GetInventory(connection);
 
-                    items = itemMasterServices.GetItemMaster(connection);
-
-                    return new Result<List<itemMaster>>
+                    return new Result<List<InventoryStatus>>
                     {
-                        result = items,
+                        result = inventories,
                         success = true,
-                        message = "GET_ITEM_MASTER"
+                        message = "GET_INVENTORY"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<List<itemMaster>>
+                return new Result<List<InventoryStatus>>
                 {
                     result = null,
                     success = false,
