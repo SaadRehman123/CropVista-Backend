@@ -8,5 +8,6 @@
         public int StockEntryQuantity { get; set; }
         public string StockEntryTo { get; set; }
         public string StockEntryDate { get; set; }
+        public string ProductionOrderId { get; set; }
     }
 }

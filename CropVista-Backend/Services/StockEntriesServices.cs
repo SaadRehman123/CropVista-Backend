@@ -22,6 +22,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@StockEntryQuantity", stockEntries.StockEntryQuantity);
                     cmd.Parameters.AddWithValue("@StockEntryTo", stockEntries.StockEntryTo);
                     cmd.Parameters.AddWithValue("@StockEntryDate", DateTime.Parse(stockEntries.StockEntryDate));
+                    cmd.Parameters.AddWithValue("@ProductionOrderId", stockEntries.ProductionOrderId); 
 
                     // Output parameter to capture the generated ID
                     SqlParameter outputParam = new SqlParameter("@StockEntryId", SqlDbType.NVarChar, 50)
@@ -64,6 +65,7 @@ namespace CropVista_Backend.Services
                     command.Parameters.AddWithValue("@StockEntryQuantity", "");
                     command.Parameters.AddWithValue("@StockEntryTo", "");
                     command.Parameters.AddWithValue("@StockEntryDate", "");
+                    command.Parameters.AddWithValue("@ProductionOrderId", "");
 
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
@@ -79,7 +81,8 @@ namespace CropVista_Backend.Services
                                 StockEntryWarehouse = reader.GetString(reader.GetOrdinal("StockEntryWarehouse")),
                                 StockEntryQuantity = reader.GetInt32(reader.GetOrdinal("StockEntryQuantity")),
                                 StockEntryTo = reader.GetString(reader.GetOrdinal("StockEntryTo")),
-                                StockEntryDate = reader.GetDateTime(reader.GetOrdinal("StockEntryDate")).ToString("yyyy-MM-dd")
+                                StockEntryDate = reader.GetDateTime(reader.GetOrdinal("StockEntryDate")).ToString("yyyy-MM-dd"),
+                                ProductionOrderId = reader.GetString(reader.GetOrdinal("ProductionOrderId"))
                             };
 
                             stockEntries.Add(stock);
