@@ -83,7 +83,6 @@ namespace CropVista_Backend.Services
 
             return item;
         }
-
         public List<itemMaster> GetItemMaster(SqlConnection connection)
         {
             List<itemMaster> items = new List<itemMaster>();
