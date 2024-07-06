@@ -24,6 +24,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@disable", item.Disable);
                     cmd.Parameters.AddWithValue("@UOM", item.UOM);
                     cmd.Parameters.AddWithValue("@season", item.season);
+                    cmd.Parameters.AddWithValue("@warehouseId", item.warehouseId);
 
                     // Output parameter to capture the generated ID
                     SqlParameter outputParam = new SqlParameter("@itemId", SqlDbType.NVarChar, 50)
@@ -66,6 +67,7 @@ namespace CropVista_Backend.Services
                     cmd.Parameters.AddWithValue("@disable", item.Disable);
                     cmd.Parameters.AddWithValue("@UOM", item.UOM);
                     cmd.Parameters.AddWithValue("@season", item.season);
+                    cmd.Parameters.AddWithValue("@warehouseId", item.warehouseId);
 
                     connection.Open();
                     int i = cmd.ExecuteNonQuery();
@@ -102,6 +104,7 @@ namespace CropVista_Backend.Services
                     command.Parameters.AddWithValue("@disable", "");
                     command.Parameters.AddWithValue("@UOM", "");
                     command.Parameters.AddWithValue("@season", "");
+                    command.Parameters.AddWithValue("@warehouseId", "");
 
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
@@ -120,6 +123,7 @@ namespace CropVista_Backend.Services
                                 Disable = reader.GetBoolean(reader.GetOrdinal("disable")),
                                 UOM = reader.GetString(reader.GetOrdinal("UOM")),
                                 season = reader.GetString(reader.GetOrdinal("season")),
+                                warehouseId = reader.GetString(reader.GetOrdinal("warehouseId"))
                             };
 
                             items.Add(item);

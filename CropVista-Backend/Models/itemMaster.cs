@@ -10,5 +10,6 @@
         public bool Disable { get; set; }
         public string UOM { get; set; }
         public string season { get; set; }
+        public string warehouseId { get; set; }
     }
 }

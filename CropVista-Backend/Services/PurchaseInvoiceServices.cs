@@ -4,11 +4,11 @@ using System.Data;
 
 namespace CropVista_Backend.Services
 {
-    public class PurchaseOrderServices
+    public class PurchaseInvoiceServices
     {
-        public string AddPurchaseOrder(SqlConnection connection, PurchaseOrder purchaseOrder)
+        public string AddPurchaseInvoice(SqlConnection connection, PurchaseInvoice purchaseInvoice)
         {
-            string pro_Id = "";
+            string pi_Id = "";
 
             try
             {
@@ -16,23 +16,24 @@ namespace CropVista_Backend.Services
 
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    using (SqlCommand cmd = new SqlCommand("CreatePurchaseOrder", connection, transaction))
+                    using (SqlCommand cmd = new SqlCommand("CreatePurchaseInvoice", connection, transaction))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@queryType", 1);
-                        cmd.Parameters.AddWithValue("@creationDate", purchaseOrder.creationDate);
-                        cmd.Parameters.AddWithValue("@requiredBy", purchaseOrder.requiredBy);
-                        cmd.Parameters.AddWithValue("@pr_Id", purchaseOrder.pr_Id);
-                        cmd.Parameters.AddWithValue("@vendorId", purchaseOrder.vendorId);
-                        cmd.Parameters.AddWithValue("@vendorName", purchaseOrder.vendorName);
-                        cmd.Parameters.AddWithValue("@vendorAddress", purchaseOrder.vendorAddress);
-                        cmd.Parameters.AddWithValue("@vendorNumber", purchaseOrder.vendorNumber);
-                        cmd.Parameters.AddWithValue("@purchaseOrderStatus", purchaseOrder.purchaseOrderStatus);
-                        cmd.Parameters.AddWithValue("@total", purchaseOrder.total);
+                        cmd.Parameters.AddWithValue("@dueDate", purchaseInvoice.dueDate);
+                        cmd.Parameters.AddWithValue("@creationDate", purchaseInvoice.creationDate);
+                        cmd.Parameters.AddWithValue("@gr_Id", purchaseInvoice.gr_Id);
+                        cmd.Parameters.AddWithValue("@vendorId", purchaseInvoice.vendorId);
+                        cmd.Parameters.AddWithValue("@vendorName", purchaseInvoice.vendorName);
+                        cmd.Parameters.AddWithValue("@vendorAddress", purchaseInvoice.vendorAddress);
+                        cmd.Parameters.AddWithValue("@vendorNumber", purchaseInvoice.vendorNumber);
+                        cmd.Parameters.AddWithValue("@pi_Status", purchaseInvoice.pi_Status);
+                        cmd.Parameters.AddWithValue("@paid", purchaseInvoice.paid);
+                        cmd.Parameters.AddWithValue("@total", purchaseInvoice.total);
 
                         // Output parameter to capture the generated ID
-                        SqlParameter outputParam = new SqlParameter("@pro_Id", SqlDbType.NVarChar, 50)
+                        SqlParameter outputParam = new SqlParameter("@pi_Id", SqlDbType.NVarChar, 50)
                         {
                             Direction = ParameterDirection.Output
                         };
@@ -40,12 +41,12 @@ namespace CropVista_Backend.Services
 
                         cmd.ExecuteNonQuery();
 
-                        pro_Id = outputParam.Value.ToString();
+                        pi_Id = outputParam.Value.ToString();
                     }
 
-                    foreach (var item in purchaseOrder.Children)
+                    foreach (var item in purchaseInvoice.Children)
                     {
-                        using (SqlCommand cmd = new SqlCommand("CreatePurchaseOrderItems", connection, transaction))
+                        using (SqlCommand cmd = new SqlCommand("CreatePurchaseInvoiceItems", connection, transaction))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -56,9 +57,9 @@ namespace CropVista_Backend.Services
                             cmd.Parameters.AddWithValue("@uom", item.uom);
                             cmd.Parameters.AddWithValue("@rate", item.rate);
                             cmd.Parameters.AddWithValue("@amount", item.amount);
-                            cmd.Parameters.AddWithValue("@pro_Id", pro_Id);
+                            cmd.Parameters.AddWithValue("@pi_Id", pi_Id);
 
-                            SqlParameter outputParam = new SqlParameter("@pro_ItemId", SqlDbType.NVarChar, 50)
+                            SqlParameter outputParam = new SqlParameter("@pi_ItemId", SqlDbType.NVarChar, 50)
                             {
                                 Direction = ParameterDirection.Output
                             };
@@ -66,7 +67,7 @@ namespace CropVista_Backend.Services
 
                             cmd.ExecuteNonQuery();
 
-                            item.pro_ItemId = outputParam.Value.ToString();
+                            item.pi_ItemId = outputParam.Value.ToString();
                         }
                     }
 
@@ -75,16 +76,16 @@ namespace CropVista_Backend.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the purchase request: " + ex.Message);
+                throw new Exception(ex.Message);
             }
             finally
             {
                 connection.Close();
             }
 
-            return pro_Id;
+            return pi_Id;
         }
-        public void UpdatePurchaseOrder(SqlConnection connection, PurchaseOrder purchaseOrder, string pro_Id)
+        public void UpdatePurchaseInvoice(SqlConnection connection, PurchaseInvoice purchaseInvoice, string pi_Id)
         {
             try
             {
@@ -92,21 +93,22 @@ namespace CropVista_Backend.Services
 
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    using (SqlCommand cmd = new SqlCommand("CreatePurchaseOrder", connection, transaction))
+                    using (SqlCommand cmd = new SqlCommand("CreatePurchaseInvoice", connection, transaction))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@queryType", 2);
-                        cmd.Parameters.AddWithValue("@pro_Id", pro_Id);
-                        cmd.Parameters.AddWithValue("@creationDate", purchaseOrder.creationDate);
-                        cmd.Parameters.AddWithValue("@requiredBy", purchaseOrder.requiredBy);
-                        cmd.Parameters.AddWithValue("@pr_Id", purchaseOrder.pr_Id);
-                        cmd.Parameters.AddWithValue("@vendorId", purchaseOrder.vendorId);
-                        cmd.Parameters.AddWithValue("@vendorName", purchaseOrder.vendorName);
-                        cmd.Parameters.AddWithValue("@vendorAddress", purchaseOrder.vendorAddress);
-                        cmd.Parameters.AddWithValue("@vendorNumber", purchaseOrder.vendorNumber);
-                        cmd.Parameters.AddWithValue("@total", purchaseOrder.total);
-                        cmd.Parameters.AddWithValue("@purchaseOrderStatus", purchaseOrder.purchaseOrderStatus);
+                        cmd.Parameters.AddWithValue("@pi_Id", pi_Id);
+                        cmd.Parameters.AddWithValue("@dueDate", purchaseInvoice.dueDate);
+                        cmd.Parameters.AddWithValue("@creationDate", purchaseInvoice.creationDate);
+                        cmd.Parameters.AddWithValue("@gr_Id", purchaseInvoice.gr_Id);
+                        cmd.Parameters.AddWithValue("@vendorId", purchaseInvoice.vendorId);
+                        cmd.Parameters.AddWithValue("@vendorName", purchaseInvoice.vendorName);
+                        cmd.Parameters.AddWithValue("@vendorAddress", purchaseInvoice.vendorAddress);
+                        cmd.Parameters.AddWithValue("@vendorNumber", purchaseInvoice.vendorNumber);
+                        cmd.Parameters.AddWithValue("@pi_Status", purchaseInvoice.pi_Status);
+                        cmd.Parameters.AddWithValue("@paid", purchaseInvoice.paid);
+                        cmd.Parameters.AddWithValue("@total", purchaseInvoice.total);
 
                         cmd.ExecuteNonQuery();
                     }
@@ -123,75 +125,77 @@ namespace CropVista_Backend.Services
                 connection.Close();
             }
         }
-        public List<PurchaseOrder> GetPurchaseOrder(SqlConnection connection, string pro_Id)
+        public List<PurchaseInvoice> GetPurchaseInvoice(SqlConnection connection, string pi_Id)
         {
-            List<PurchaseOrder> resultList = new List<PurchaseOrder>();
+            List<PurchaseInvoice> resultList = new List<PurchaseInvoice>();
 
             try
             {
-                using (SqlCommand command = new SqlCommand("CreatePurchaseOrder", connection))
+                using (SqlCommand command = new SqlCommand("CreatePurchaseInvoice", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@queryType", 4);
-                    command.Parameters.AddWithValue("@pro_Id", pro_Id);
+                    command.Parameters.AddWithValue("@pi_Id", pi_Id);
+                    command.Parameters.AddWithValue("@dueDate", "");
                     command.Parameters.AddWithValue("@creationDate", "");
-                    command.Parameters.AddWithValue("@requiredBy", "");
-                    command.Parameters.AddWithValue("@pr_Id", "");
+                    command.Parameters.AddWithValue("@gr_Id", "");
                     command.Parameters.AddWithValue("@vendorId", "");
                     command.Parameters.AddWithValue("@vendorName", "");
                     command.Parameters.AddWithValue("@vendorAddress", "");
                     command.Parameters.AddWithValue("@vendorNumber", "");
+                    command.Parameters.AddWithValue("@pi_Status", "");
+                    command.Parameters.AddWithValue("@paid", "");
                     command.Parameters.AddWithValue("@total", "");
-                    command.Parameters.AddWithValue("@purchaseOrderStatus", "");
 
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
 
                     if (reader.HasRows)
                     {
-                        Dictionary<string, PurchaseOrder> purchaseOrderDictionary = new Dictionary<string, PurchaseOrder>();
+                        Dictionary<string, PurchaseInvoice> purchaseInvoiceDictionary = new Dictionary<string, PurchaseInvoice>();
 
                         while (reader.Read())
                         {
-                            string purchaseOrderId = reader.GetString(reader.GetOrdinal("pro_Id"));
+                            string purchaseInvoiceId = reader.GetString(reader.GetOrdinal("pi_Id"));
 
-                            if (!purchaseOrderDictionary.ContainsKey(purchaseOrderId))
+                            if (!purchaseInvoiceDictionary.ContainsKey(purchaseInvoiceId))
                             {
-                                PurchaseOrder purchaseOrder = new PurchaseOrder
+                                PurchaseInvoice purchaseInvoice = new PurchaseInvoice
                                 {
-                                    pro_Id = purchaseOrderId,
+                                    pi_Id = purchaseInvoiceId,
+                                    dueDate = reader.GetDateTime(reader.GetOrdinal("dueDate")).ToString("yyyy-MM-dd"),
                                     creationDate = reader.GetDateTime(reader.GetOrdinal("creationDate")).ToString("yyyy-MM-dd"),
-                                    requiredBy = reader.GetDateTime(reader.GetOrdinal("requiredBy")).ToString("yyyy-MM-dd"),
-                                    pr_Id = reader.GetString(reader.GetOrdinal("pr_Id")),
+                                    gr_Id = reader.GetString(reader.GetOrdinal("gr_Id")),
                                     vendorId = reader.GetString(reader.GetOrdinal("vendorId")),
                                     vendorName = reader.GetString(reader.GetOrdinal("vendorName")),
                                     vendorAddress = reader.GetString(reader.GetOrdinal("vendorAddress")),
                                     vendorNumber = reader.GetString(reader.GetOrdinal("vendorNumber")),
+                                    pi_Status = reader.GetString(reader.GetOrdinal("pi_Status")),
+                                    paid = reader.GetBoolean(reader.GetOrdinal("paid")),
                                     total = reader.GetInt32(reader.GetOrdinal("total")),
-                                    purchaseOrderStatus = reader.GetString(reader.GetOrdinal("purchaseOrderStatus")),
-                                    Children = new List<PurchaseOrderItems>()
+                                    Children = new List<PurchaseInvoiceItems>()
                                 };
 
-                                purchaseOrderDictionary.Add(purchaseOrderId, purchaseOrder);
+                                purchaseInvoiceDictionary.Add(purchaseInvoiceId, purchaseInvoice);
                             }
 
-                            PurchaseOrderItems purchaseOrderItems = new PurchaseOrderItems
+                            PurchaseInvoiceItems purchaseInvoiceItems = new PurchaseInvoiceItems
                             {
-                                pro_ItemId = reader.GetString(reader.GetOrdinal("pro_ItemId")),
+                                pi_ItemId = reader.GetString(reader.GetOrdinal("pi_ItemId")),
                                 itemId = reader.GetString(reader.GetOrdinal("itemId")),
                                 itemName = reader.GetString(reader.GetOrdinal("itemName")),
                                 itemQuantity = reader.GetInt32(reader.GetOrdinal("itemQuantity")),
                                 uom = reader.GetString(reader.GetOrdinal("uom")),
                                 rate = reader.GetInt32(reader.GetOrdinal("rate")),
                                 amount = reader.GetInt32(reader.GetOrdinal("amount")),
-                                pro_Id = reader.GetString(reader.GetOrdinal("pro_Id"))
+                                pi_Id = reader.GetString(reader.GetOrdinal("pi_Id"))
                             };
 
-                            purchaseOrderDictionary[purchaseOrderId].Children.Add(purchaseOrderItems);
+                            purchaseInvoiceDictionary[purchaseInvoiceId].Children.Add(purchaseInvoiceItems);
                         }
 
-                        resultList.AddRange(purchaseOrderDictionary.Values);
+                        resultList.AddRange(purchaseInvoiceDictionary.Values);
                     }
                 }
             }
