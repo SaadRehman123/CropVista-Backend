@@ -7,40 +7,40 @@ using System.Data.SqlClient;
 
 namespace CropVista_Backend.Controllers
 {
-    [Route("rest/goodReceipt")]
+    [Route("rest/saleInvoice")]
     [ApiController]
-    public class GoodReceiptController : ControllerBase
+    public class SalesInvoiceController : ControllerBase
     {
         private IConfiguration _config;
-        public GoodReceiptController(IConfiguration config)
+        public SalesInvoiceController(IConfiguration config)
         {
             _config = config;
         }
 
         [HttpPost]
         [Route("create")]
-        public Result<GoodReceipt> AddGoodReceipt(GoodReceipt goodReceipt)
+        public Result<SaleInvoice> AddSaleInvoice(SaleInvoice saleInvoice)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    GoodReceiptServices goodReceiptServices = new GoodReceiptServices();
-                    string gr_Id = goodReceiptServices.AddGoodReceipt(connection, goodReceipt);
+                    SaleInvoiceServices saleInvoiceServices = new SaleInvoiceServices();
+                    string salesInvoice_Id = saleInvoiceServices.AddSaleInvoice(connection, saleInvoice);
 
-                    goodReceipt.gr_Id = gr_Id;
+                    saleInvoice.salesInvoice_Id = salesInvoice_Id;
 
-                    return new Result<GoodReceipt>
+                    return new Result<SaleInvoice>
                     {
-                        result = goodReceipt,
+                        result = saleInvoice,
                         success = true,
-                        message = "ADD_GOOD_RECEIPT"
+                        message = "ADD_SALE_INVOICE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<GoodReceipt>
+                return new Result<SaleInvoice>
                 {
                     result = null,
                     success = false,
@@ -50,29 +50,29 @@ namespace CropVista_Backend.Controllers
         }
 
         [HttpPost]
-        [Route("update/{gr_Id}")]
-        public Result<GoodReceipt> UpdateGoodReceipt(GoodReceipt goodReceipt, string gr_Id)
+        [Route("update/{id}")]
+        public Result<SaleInvoice> UpdateSaleInvoice(SaleInvoice saleInvoice, string id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    GoodReceiptServices goodReceiptServices = new GoodReceiptServices();
-                    goodReceiptServices.UpdateGoodReceipt(connection, goodReceipt, gr_Id);
+                    SaleInvoiceServices saleInvoiceServices = new SaleInvoiceServices();
+                    saleInvoiceServices.UpdateSaleInvoice(connection, saleInvoice, id);
 
-                    goodReceipt.gr_Id = gr_Id;
+                    saleInvoice.salesInvoice_Id = id;
 
-                    return new Result<GoodReceipt>
+                    return new Result<SaleInvoice>
                     {
-                        result = goodReceipt,
+                        result = saleInvoice,
                         success = true,
-                        message = "UPDATE_GOOD_RECEIPT"
+                        message = "UPDATE_SALE_INVOICE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<GoodReceipt>
+                return new Result<SaleInvoice>
                 {
                     result = null,
                     success = false,
@@ -82,29 +82,29 @@ namespace CropVista_Backend.Controllers
         }
 
         [HttpGet]
-        [Route("getGoodReceipt/{gr_Id}")]
-        public Result<List<GoodReceipt>> GetGoodReceipt(string gr_Id)
+        [Route("getSaleInvoice/{id}")]
+        public Result<List<SaleInvoice>> GetSaleInvoice(string id)
         {
             try
             {
                 using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
                 {
-                    List<GoodReceipt> goodReceipts = new List<GoodReceipt>();
+                    List<SaleInvoice> saleInvoices = new List<SaleInvoice>();
 
-                    GoodReceiptServices goodReceiptServices = new GoodReceiptServices();
-                    goodReceipts = goodReceiptServices.GetGoodReceipt(connection, gr_Id);
+                    SaleInvoiceServices saleInvoiceServices = new SaleInvoiceServices();
+                    saleInvoices = saleInvoiceServices.GetSaleInvoice(connection, id);
 
-                    return new Result<List<GoodReceipt>>
+                    return new Result<List<SaleInvoice>>
                     {
-                        result = goodReceipts,
+                        result = saleInvoices,
                         success = true,
-                        message = "GET_GOOD_RECEIPT"
+                        message = "GET_SALE_INVOICE"
                     };
                 }
             }
             catch (Exception ex)
             {
-                return new Result<List<GoodReceipt>>
+                return new Result<List<SaleInvoice>>
                 {
                     result = null,
                     success = false,

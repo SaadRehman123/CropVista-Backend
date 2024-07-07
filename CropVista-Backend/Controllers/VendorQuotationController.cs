@@ -80,7 +80,39 @@ namespace CropVista_Backend.Controllers
                 };
             }
         }
-        
+
+        [HttpPost]
+        [Route("delete/{vq_Id}")]
+        public Result<VendorQuotation> DeleteVendorQuotation(VendorQuotation vendorQuotation, string vq_Id)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_config["ConnectionString:connection"]))
+                {
+                    VendorQuotationServices vendorQuotationServices = new VendorQuotationServices();
+                    vendorQuotationServices.DeleteVendorQuotation(connection, vendorQuotation, vq_Id);
+
+                    vendorQuotation.vq_Id = vq_Id;
+
+                    return new Result<VendorQuotation>
+                    {
+                        result = vendorQuotation,
+                        success = true,
+                        message = "DELETE_VENDOR_QUOTATION"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Result<VendorQuotation>
+                {
+                    result = null,
+                    success = false,
+                    message = ex.Message
+                };
+            }
+        }
+
         [HttpGet]
         [Route("getVQ/{vq_Id}")]
         public Result<List<VendorQuotation>> GetVendorQuotation(string vq_Id)
