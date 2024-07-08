@@ -254,7 +254,7 @@ namespace CropVista_Backend.Services
 
                         while (reader.Read())
                         {
-                            string saleOrderId = reader.GetString(reader.GetOrdinal("saleOrderId"));
+                            string saleOrderId = reader.GetString(reader.GetOrdinal("saleOrder_Id"));
 
                             if (!saleOrderDictionary.ContainsKey(saleOrderId))
                             {
