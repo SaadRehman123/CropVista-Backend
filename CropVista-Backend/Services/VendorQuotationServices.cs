@@ -149,24 +149,6 @@ namespace CropVista_Backend.Services
 
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    using (SqlCommand cmd = new SqlCommand("CreateVendorQuotation", connection, transaction))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@queryType", 3);
-                        cmd.Parameters.AddWithValue("@vq_Id", vq_Id);
-                        cmd.Parameters.AddWithValue("@vq_CreationDate", vendorQuotation.vq_CreationDate);
-                        cmd.Parameters.AddWithValue("@rfq_Id", vendorQuotation.rfq_Id);
-                        cmd.Parameters.AddWithValue("@vendorId", vendorQuotation.vendorId);
-                        cmd.Parameters.AddWithValue("@vendorName", vendorQuotation.vendorName);
-                        cmd.Parameters.AddWithValue("@vendorAddress", vendorQuotation.vendorAddress);
-                        cmd.Parameters.AddWithValue("@vendorNumber", vendorQuotation.vendorNumber);
-                        cmd.Parameters.AddWithValue("@vq_Status", vendorQuotation.vq_Status);
-                        cmd.Parameters.AddWithValue("@total", vendorQuotation.total);
-
-                        cmd.ExecuteNonQuery();
-                    }
-
                     foreach (var item in vendorQuotation.Children)
                     {
                         using (SqlCommand cmd = new SqlCommand("CreateVendorQuotationItem", connection, transaction))
@@ -185,6 +167,24 @@ namespace CropVista_Backend.Services
 
                             cmd.ExecuteNonQuery();
                         }
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand("CreateVendorQuotation", connection, transaction))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@queryType", 3);
+                        cmd.Parameters.AddWithValue("@vq_Id", vq_Id);
+                        cmd.Parameters.AddWithValue("@vq_CreationDate", vendorQuotation.vq_CreationDate);
+                        cmd.Parameters.AddWithValue("@rfq_Id", vendorQuotation.rfq_Id);
+                        cmd.Parameters.AddWithValue("@vendorId", vendorQuotation.vendorId);
+                        cmd.Parameters.AddWithValue("@vendorName", vendorQuotation.vendorName);
+                        cmd.Parameters.AddWithValue("@vendorAddress", vendorQuotation.vendorAddress);
+                        cmd.Parameters.AddWithValue("@vendorNumber", vendorQuotation.vendorNumber);
+                        cmd.Parameters.AddWithValue("@vq_Status", vendorQuotation.vq_Status);
+                        cmd.Parameters.AddWithValue("@total", vendorQuotation.total);
+
+                        cmd.ExecuteNonQuery();
                     }
 
                     transaction.Commit();

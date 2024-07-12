@@ -13,27 +13,27 @@ namespace CropVista_Backend.Services
             try
             {
                 using (SqlCommand cmd = new SqlCommand("CreateInvetoryStatus", connection))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@queryType", 1);
-                    cmd.Parameters.AddWithValue("@inventoryItem", inventoryStatus.inventoryItem);
-                    cmd.Parameters.AddWithValue("@inventoryQuantity", inventoryStatus.inventoryQuantity);
-                    cmd.Parameters.AddWithValue("@inventoryWarehouse", inventoryStatus.inventoryWarehouse);
-
-                    // Output parameter to capture the generated ID
-                    SqlParameter outputParam = new SqlParameter("@inventoryId", SqlDbType.NVarChar, 50)
                     {
-                        Direction = ParameterDirection.Output
-                    };
-                    cmd.Parameters.Add(outputParam);
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@queryType", 1);
+                        cmd.Parameters.AddWithValue("@inventoryItem", inventoryStatus.inventoryItem);
+                        cmd.Parameters.AddWithValue("@inventoryQuantity", inventoryStatus.inventoryQuantity);
+                        cmd.Parameters.AddWithValue("@inventoryWarehouse", inventoryStatus.inventoryWarehouse);
 
-                    inventoryId = outputParam.Value.ToString();
+                        // Output parameter to capture the generated ID
+                        SqlParameter outputParam = new SqlParameter("@inventoryId", SqlDbType.NVarChar, 50)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(outputParam);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+
+                        inventoryId = outputParam.Value.ToString();
+                    }
                 }
-            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -51,19 +51,19 @@ namespace CropVista_Backend.Services
             try
             {
                 using (SqlCommand cmd = new SqlCommand("CreateInvetoryStatus", connection))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@queryType", 2);
-                    cmd.Parameters.AddWithValue("@inventoryId", id);
-                    cmd.Parameters.AddWithValue("@inventoryItem", inventoryStatus.inventoryItem);
-                    cmd.Parameters.AddWithValue("@inventoryQuantity", inventoryStatus.inventoryQuantity);
-                    cmd.Parameters.AddWithValue("@inventoryWarehouse", inventoryStatus.inventoryWarehouse);
+                        cmd.Parameters.AddWithValue("@queryType", 2);
+                        cmd.Parameters.AddWithValue("@inventoryId", id);
+                        cmd.Parameters.AddWithValue("@inventoryItem", inventoryStatus.inventoryItem);
+                        cmd.Parameters.AddWithValue("@inventoryQuantity", inventoryStatus.inventoryQuantity);
+                        cmd.Parameters.AddWithValue("@inventoryWarehouse", inventoryStatus.inventoryWarehouse);
 
-                    connection.Open();
-                    int i = cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
+                        connection.Open();
+                        int i = cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
             }
             catch (Exception ex)
             {
